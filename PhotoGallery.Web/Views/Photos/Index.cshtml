@@ -1,0 +1,148 @@
+﻿@model IEnumerable<PhotoGallery.Domain.Photo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div id="photos-container" class="photos-container clearfix">
+    @Html.AntiForgeryToken()
+
+    @*@foreach (var p in Model)
+    {
+        <div class="thumbnail col-md-6 col-md-offset-3"
+             style="margin-bottom: 15px;">
+
+            <img src="@Url.Content("~/Uploads/" + p.FileName)"
+                 alt="@Html.DisplayFor(modelItem => p.Name)">
+
+            <div class="caption">
+
+                <h3>@Html.DisplayFor(modelItem => p.Name)</h3>
+                <p>
+                    @foreach (var t in @p.Tags)
+                    {
+                        <strong style="margin-right:5px;">#@t.Name</strong>
+                    }
+                </p>
+                <p>@Html.DisplayFor(modelItem => p.CreatedAt)</p>
+
+                <button id="tag-photo-button-@p.Id"
+                        class="btn btn-default tag-photo-button"
+                        data-photo-id="@p.Id">
+                    <i class="glyphicon glyphicon-tag"></i>
+                    Tag this photo
+                </button>
+
+                <div id="tag-photo-container-@p.Id"
+                     style="display:none;"
+                     data-photo-id="@p.Id">
+
+                    <div class="form-group">
+                        <input id="tag-photo-input-@p.Id"
+                               type="text"
+                               name="name"
+                               value=""
+                               class="form-control tag-photo-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <button id="tag-photo-save-button-@p.Id"
+                                class="btn btn-default tag-photo-save-button"
+                                data-photo-id="@p.Id">
+                            <i class="glyphicon glyphicon-check"></i>
+                            Save
+                        </button>
+                        <button id="tag-photo-cancel-button-@p.Id"
+                                class="btn btn-default tag-photo-cancel-button"
+                                data-photo-id="@p.Id">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            Cancel
+                        </button>
+                    </div>
+
+                </div><!--tag-photo-container-1-->
+
+            </div><!--.caption-->
+
+        </div><!--.thumbnail-->
+    }*@
+</div>
+
+@section Scripts {
+    <script id="photo-handlebars-template" type="text/handlebars">
+        <div class="thumbnail col-md-6 col-md-offset-3"
+             style="margin-bottom: 15px;">
+
+            <h4>
+                {{ Name }}
+                <small class="pull-right">
+                    {{ CreatedAt }}
+                </small>
+            </h4>
+
+            <img src="/Uploads/{{ FileName }}"
+                 alt="{{ Name }}">
+
+            <div class="caption">
+
+                <p>
+                    {{#each Tags}}
+                        <strong style="margin-right:5px;">#{{ Name }}</strong>
+                    {{/each}}
+                </p>
+
+                <button id="tag-photo-button-{{ Id }}"
+                        class="btn btn-default tag-photo-button"
+                        data-photo-id="{{ Id }}">
+                    <i class="glyphicon glyphicon-tag"></i>
+                    Tag this photo
+                </button>
+
+                <div id="tag-photo-container-{{ Id }}"
+                     style="display:none;"
+                     data-photo-id="{{ Id }}">
+
+                    <div class="form-group">
+                        <input id="tag-photo-input-{{ Id }}"
+                               type="text"
+                               name="name"
+                               value=""
+                               class="form-control tag-photo-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <button id="tag-photo-save-button-{{ Id }}"
+                                class="btn btn-default tag-photo-save-button"
+                                data-photo-id="{{ Id }}">
+                            <i class="glyphicon glyphicon-check"></i>
+                            Save
+                        </button>
+                        <button id="tag-photo-cancel-button-{{ Id }}"
+                                class="btn btn-default tag-photo-cancel-button"
+                                data-photo-id="{{ Id }}">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            Cancel
+                        </button>
+                    </div>
+
+                </div><!--tag-photo-container-1-->
+
+            </div><!--.caption-->
+
+        </div><!--.thumbnail-->
+    </script>
+    @Scripts.Render("~/bundles/jquery.timeago")
+    @Scripts.Render("~/bundles/handlebars")
+    @Scripts.Render("~/bundles/bootstrap-tagsinput")
+    @Scripts.Render("~/bundles/photos-index")
+}
+
+@section Styles {
+    @Styles.Render("~/Content/bootstrap-tagsinput")
+}

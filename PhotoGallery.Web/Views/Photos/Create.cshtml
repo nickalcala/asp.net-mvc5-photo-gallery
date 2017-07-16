@@ -1,0 +1,84 @@
+﻿@model PhotoGallery.Web.Models.PhotoViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("UploadPhoto", "Photos"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Photo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="dropzone"
+                 id="photo-drop-zone">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/dropzone")
+    <script>
+        Dropzone.autoDiscover = false;
+        $(function () {
+            var dz = new Dropzone('#photo-drop-zone', {
+                url: "/Photos/UploadPhoto",
+                maxFiles: 1,
+                autoProcessQueue: false,
+                addRemoveLinks: true,
+                dictDefaultMessage: 'Drop a photo here.',
+                sending: function (file, xhr, formData) {
+                    formData.append("Name", $("#Name").val());
+                    formData.append("__RequestVerificationToken", $("input[name=__RequestVerificationToken]").val());
+                },
+                init: function () {
+                    var _this = this;
+                    $('form').on('submit', function (e) {
+                        e.preventDefault();
+                        console.log(e);
+                        _this.processQueue();
+                    });
+                },
+                error: function (file, response) {
+                    alert('Error uploading file!');
+                },
+                success: function (file, response) {
+                    if (response.success) {
+                        alert('Successfully uploaded file!');
+                    } else {
+                        alert('Invalid data.');
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    @Styles.Render("~/Content/dropzone")
+}
